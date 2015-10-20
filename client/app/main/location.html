@@ -1,0 +1,19 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+
+<div class="container">
+	<h1>{{location.name}}</h1>	
+
+	<img src="{{location.rating_img_url}}"></img>
+	<p>{{location.display_phone}}</p>
+	<p>{{location.location.display_address['0']}}</p>
+	<p>{{location.location.display_address['1']}}</p>
+
+	<p>Users attending: {{numAttending}}</p>
+
+	<p>View in <a href="{{location.url}}">yelp</a></p>
+
+	<button ng-click="addUserToEvent(location)">Going to location</button>
+	<button ng-click="removeUserFromEvent(location)">Remove from event</button>
+</div>
+
