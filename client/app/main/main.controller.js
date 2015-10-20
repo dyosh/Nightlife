@@ -73,6 +73,7 @@ angular.module('nightlifeApp')
         $http.get('/api/locations/checkForLocation/' + location.yelp_id).success(function(response) {
           // Location exists
           var currentLocation = response[0];
+          console.log(currentLocation);
           var isAttending = false;
           // add user if not already attending
           for (var i = 0; i < currentLocation.usersAttending.length; i++) {
@@ -115,8 +116,6 @@ angular.module('nightlifeApp')
     $scope.removeUserFromEvent = function(location) {
       var updatedLocation = location;
 
-      console.log(updatedLocation);
-
       if (updatedLocation.usersAttending.length === 1) {
         updatedLocation.usersAttending = [];
         $http.put('/api/locations/' + updatedLocation._id, updatedLocation).success(function(response) {
@@ -126,14 +125,14 @@ angular.module('nightlifeApp')
       } else {
         for(var i = 0; i < updatedLocation.usersAttending.length; i++) {
           if (updatedLocation.usersAttending[i].user_id === $rootScope.getCurrentUser()._id) {
-            delete updatedLocation.usersAttending[i];
-            $http.put('api/locations/' + updatedLocation._id, updatedLocation).success(function(response) {
-              $rootScope.location = response;
-              $rootScope.numAttending = $rootScope.location.usersAttending.length;
-            });
+            updatedLocation.usersAttending.splice(i, 1);
             break;
           }
-        }        
+        }
+        $http.put('api/locations/' + updatedLocation._id, updatedLocation).success(function(response) {
+          $rootScope.location = response;
+          $rootScope.numAttending = $rootScope.location.usersAttending.length;
+        });                
       }
 
     };
