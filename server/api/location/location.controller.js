@@ -5,10 +5,10 @@ var Location = require('./location.model');
 
 exports.getLocations = function(req, res) {
   var yelp = require("yelp").createClient({
-    consumer_key: "gJGJV0pkot6JYwjR3PNdAA", 
-    consumer_secret: "76FG5b288Jxku7lryhvqCU4vIKw",
-    token: "SdPIBDYyjy117ssH407fmZyKHbGOQUQF",
-    token_secret: "2eN8qp_6uRaIlK29R4-rrs0NjYc"
+    consumer_key: "your_consumer_key", 
+    consumer_secret: "your_consumer_secret",
+    token: "your_token",
+    token_secret: "your_token_secret"
   }); 
   yelp.search({term: "bar", location: req.params.location}, function(error, data) {
     return res.json(data);
