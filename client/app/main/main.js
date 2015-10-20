@@ -6,5 +6,9 @@ angular.module('nightlifeApp')
       .when('/', {
         templateUrl: 'app/main/main.html',
         controller: 'MainCtrl'
+      })
+      .when('/location', {
+        templateUrl: 'app/main/location.html',
+        controller: 'MainCtrl'
       });
   });

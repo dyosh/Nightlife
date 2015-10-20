@@ -1,3 +1,17 @@
+.loading {
+/*    -webkit-animation: cssAnimation 3.5s infinite linear;
+    -moz-animation: cssAnimation 3.5s infinite linear;
+    -o-animation: cssAnimation 3.5s infinite linear;*/
+    font-size: 60px;
+    text-align: center;
+    line-height: 60px;
+    height: 60px !important;
+}
+
+ul {
+    list-style-type: none;
+}
+
 .thing-form {
     margin: 20px 0;
 }
@@ -7,19 +21,43 @@
     margin-top: -20px;
 }
 
+#banner-img {
+    max-width: 500px;
+    max-height: 300px;
+}
+
 #banner h1 {
     font-size: 60px;
     line-height: 1;
     letter-spacing: -1px;
 }
 
+#locations {
+    text-align: center;
+}
+
+#location {
+    background-color: blue;
+    margin: 5px;
+}
+
+#test {
+    width: 100%;
+    text-align: center;
+}
+
 .hero-unit {
     position: relative;
-    padding: 30px 15px;
+    /*padding: 150px, 100px;*/
     color: #F5F5F5;
     text-align: center;
     text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-    background: #4393B9;
+    /*background: #4393B9;*/
+    background-image: url("/assets/images/woman-street.jpg");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 100% 175%;
+    height: 475px;
 }
 
 .footer {
