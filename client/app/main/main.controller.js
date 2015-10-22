@@ -9,35 +9,41 @@ angular.module('nightlifeApp')
 
     $scope.findLocations = function(location) {
       $scope.isLoading = true;
-
       $rootScope.listOfLocations = [];
+      $rootScope.isAttending = [];
+
       $http.get('/api/locations/' + location).success(function(data) {
         $scope.isLoading = false;
         var locations = data.businesses;
-        var test = [];
-        var count = 0;
 
-        for(var location in locations) {
-          test.push(locations[location]);
-          $http.get('/api/locations/checkForLocation/' + locations[location].id).success(function(response) {
+        locations.forEach(function(location) {
+          $http.get('/api/locations/checkForLocation/' + location.id).success(function(response){
             // location found
-            $rootScope.listOfLocations.push(response[0]);   
-            count++;
-          }).error(function(err) {
-            // location not found
-            var error = err;
-            var structedLocation = createLocation(test[count]);
+            var location = response[0];
+            // check to see if the user is attending the event
+            var attendingCheck = isUserAttending(location);
+            if (attendingCheck) {
+              $rootScope.isAttending.push(true);
+            } else {
+              $rootScope.isAttending.push(false);
+            }
+            $rootScope.listOfLocations.push(location);
+
+          }).error(function() {
+            // location not found 
+            var structedLocation = createLocation(location);
+            $rootScope.isAttending.push(false);
             $rootScope.listOfLocations.push(structedLocation);
-            count++;
           });
-        }
+
+        });
+
 
       });
 
     };
 
     var createLocation = function(location) {
-
       var newLocation = {
         id: location.id,
         yelp_id: location.id,
@@ -60,37 +66,52 @@ angular.module('nightlifeApp')
       return newLocation;
     };    
 
-    $scope.locationDetails = function(location) {
+    $scope.locationDetails = function(location, index) {
       $rootScope.location = location;
-      $rootScope.numAttending = location.usersAttending.length;
+      $rootScope.index = index;
       var url = $location.url('/location');
     };
 
-    $scope.addUserToEvent = function(location) {
+    var isUserAttending = function(currentLocation) {
+      var isAttending = false;
+      
+      for (var i = 0; i < currentLocation.usersAttending.length; i++) {
+        if (currentLocation.usersAttending[i].user_id === $rootScope.getCurrentUser()._id) {
+          isAttending = true;
+          break;
+        } else {
+          isAttending = false
+        }
+      }
+      return isAttending;
+    };
+
+
+    $scope.addUserToEvent = function(location, index) {
+      console.log("rootScope.isAttending");
+      console.log($rootScope.isAttending[index]);
 
       if ($scope.isLoggedIn()) {
         // check to see if the location exists in the db
         $http.get('/api/locations/checkForLocation/' + location.yelp_id).success(function(response) {
           // Location exists
           var currentLocation = response[0];
-          console.log(currentLocation);
-          var isAttending = false;
-          // add user if not already attending
-          for (var i = 0; i < currentLocation.usersAttending.length; i++) {
-            if (currentLocation.usersAttending[i].user_id === $rootScope.getCurrentUser()._id) {
-              isAttending = true;
-              break;
-            } else {
-              isAttending = false;
-            }
-          }
+          var isAttending = isUserAttending(currentLocation);
 
           if (!isAttending) {
-            currentLocation.usersAttending.push({ user_id: $rootScope.getCurrentUser()._id, user_name: $rootScope.getCurrentUser().name });
-            $http.put('/api/locations/' + currentLocation._id, currentLocation).success(function(response) {
-              $rootScope.location = response;
-              $rootScope.numAttending = $rootScope.location.usersAttending.length;
+            currentLocation.usersAttending.push({ user_id: $rootScope.getCurrentUser()._id,
+                                                  user_name: $rootScope.getCurrentUser().name });
+            
+            $http.delete('/api/locations/' + currentLocation._id).success(function(res) {
+
+              $http.post('/api/locations/', currentLocation).success(function(response) {
+                $rootScope.location = response;
+                $rootScope.isAttending[index] = true;
+                $rootScope.listOfLocations[index] = response;
+              });
+
             });
+
           } else {
             console.log("User is already attending this event!");
           }
@@ -98,11 +119,13 @@ angular.module('nightlifeApp')
         }).error(function(err) {
           // Location not in the DB
           var newLocation = createLocation(location);
-          newLocation.usersAttending.push({ user_id: $rootScope.getCurrentUser()._id, user_name: $rootScope.getCurrentUser().name });
+          $rootScope.isAttending[index] = true;
+          newLocation.usersAttending.push({ user_id: $rootScope.getCurrentUser()._id, 
+                                            user_name: $rootScope.getCurrentUser().name });
   
           $http.post('/api/locations/', newLocation).success(function(response) {
             $rootScope.location = response;
-            $rootScope.numAttending = newLocation.usersAttending.length;
+            $rootScope.listOfLocations[index] = response;
           });
 
         });
@@ -110,31 +133,61 @@ angular.module('nightlifeApp')
       } 
       else if ($scope.isLoggedIn() === false) {
         console.log("not logged in");
+        alert("Sorry, you have to be logged in to attend an event");
       }
     };
 
-    $scope.removeUserFromEvent = function(location) {
-      var updatedLocation = location;
+    $scope.removeUserFromEvent = function(location, index) {
+      if ($scope.isLoggedIn()) {
 
-      if (updatedLocation.usersAttending.length === 1) {
-        updatedLocation.usersAttending = [];
-        $http.put('/api/locations/' + updatedLocation._id, updatedLocation).success(function(response) {
-          $rootScope.location = response;
-          $rootScope.numAttending = $rootScope.location.usersAttending.length;
-        }); 
-      } else {
-        for(var i = 0; i < updatedLocation.usersAttending.length; i++) {
-          if (updatedLocation.usersAttending[i].user_id === $rootScope.getCurrentUser()._id) {
-            updatedLocation.usersAttending.splice(i, 1);
-            break;
+        var updatedLocation = location;
+        var changesMade = false;
+
+        if (updatedLocation.usersAttending.length === 1 && updatedLocation.usersAttending[0] === $rootScope.getCurrentUser()._id) {
+          updatedLocation.usersAttending = [];
+
+            $http.delete('/api/locations/' + updatedLocation._id).success(function(res) {
+
+              $http.post('/api/locations/', updatedLocation).success(function(response) {
+                $rootScope.location = response;
+                $rootScope.isAttending[index] = false;
+                $rootScope.listOfLocations[index] = response;
+              });
+
+            });
+
+        } else {
+          for(var i = 0; i < updatedLocation.usersAttending.length; i++) {
+            if (updatedLocation.usersAttending[i].user_id === $rootScope.getCurrentUser()._id) {
+              updatedLocation.usersAttending.splice(i, 1);
+              changesMade = true;
+              break;
+            }
           }
-        }
-        $http.put('api/locations/' + updatedLocation._id, updatedLocation).success(function(response) {
-          $rootScope.location = response;
-          $rootScope.numAttending = $rootScope.location.usersAttending.length;
-        });                
-      }
 
+          if (changesMade) {
+            $http.delete('/api/locations/' + updatedLocation._id).success(function(res) {
+
+              $http.post('/api/locations/', updatedLocation).success(function(response) {
+                $rootScope.location = response;
+                $rootScope.isAttending[index] = false;
+                $rootScope.listOfLocations[index] = response;
+              });
+
+            });
+      
+          } 
+          else if (!changesMade) {
+            console.log("nothing to change here!")
+          }
+                  
+        }
+
+      } 
+      else if ($scope.isLoggedIn() === false) {
+        console.log("not logged in");
+        alert("Sorry, you have to be logged in to attend an event");
+      }
     };
 
   });

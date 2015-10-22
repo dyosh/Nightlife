@@ -4,35 +4,60 @@
 
 <header class="hero-unit" id="banner">
   <div class="container">
-    <h1>'Allo, 'Allo!</h1>
+    <h1>Lets go!</h1>
     <p class="lead">Explore new places</p>
+    <i id="moon" class="fa fa-moon-o"></i>
   </div>
 </header>
 
-<div class="container" id="locations">
+<div class="container" id="search-locations">
   <div>
-    <h1>Find a place near you</h1>
-    <input ng-model="location"></input>
-    <button class="btn btn-danger" ng-click="findLocations(location)">Search</button>
-  </div>
-
-  <div class="loading" ng-show="isLoading"><i class="fa fa-spinner fa-pulse"></i></div>
-
-  <div id="test">
-    <div class="col-md-4" ng-repeat="location in listOfLocations">       
-      <div id="location" ng-click="locationDetails(location)">
-        <h4>{{location.name}}</h4>
-        <a href="{{location.url}}"><img src="{{location.image_url}}"></img></a>
+    <form ng-submit="findLocations(locationName)">
+      <h1 style="font-weight: 300; color: #464646">Find a place near you</h1>
+      <div class="input-group input-container">
+        <input type="text" class="form-control" placeholder="8675309 Rockin Blvd" ng-model="locationName"></input>
+        <span class="input-group-addon" ng-click="findLocations(locationName)">Search</span>
       </div>
-    </div>
+    </form>
   </div>
 </div>
 
-<!-- <div ng-repeat="product in products" ng-if="$index % 3 == 0" class="row">
-    <div class="col-xs-4">{{products[$index]}}</div>
-    <div class="col-xs-4">{{products[$index + 1]}}</div>
-    <div class="col-xs-4">{{products[$index + 2]}}</div>
-</div> -->
+<div class="loading" ng-show="isLoading"><i class="fa fa-spinner fa-pulse"></i></div>
+
+<div class="locations-container">
+  <div class="row">
+  <!-- <section ng-repeat="location in listOfLocations">   -->
+    <div id="location" class="col-lg-3 col-md-4 col-sm-6 col-xs-12" ng-repeat="location in listOfLocations track by $index">
+      <div class="row" style="padding-bottom: 15px;">
+        <div style="padding-top: 15px">
+          <div class="col-md-7 col-sm-7 col-xs-6">
+
+            <p class="details-link" id="location-name" ng-click="locationDetails(location, $index)">{{location.name}}</p>
+
+            <span><img src="{{location.rating_img_url}}"></img></span>
+            <p>{{location.location.display_address[0]}}</p>
+            <p>{{location.location.display_address[1]}}</p>
+          </div>        
+
+          <div class="col-md-5 col-sm-5 col-xs-6">
+            <img class="details-link" id="location-img" src="{{location.image_url}}" ng-click="locationDetails(location, $index)"></img>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" id="front-pg-btns">
+        <div id="display-num">
+          <p class="details-link" style="font-size: 17px" ng-click="locationDetails(location, $index)">{{location.usersAttending.length}} going</p>
+        </div>
+        <!-- <button class="btn btn" ng-click="locationDetails(location, $index)"><i class="fa fa-info"></i></button> -->
+        <button class="btn add-user-btn" ng-click="addUserToEvent(location, $index)" ng-hide="isAttending[$index]">Attend</button>
+        <button class="btn rm-user-btn" ng-click="removeUserFromEvent(location, $index)" ng-show="isAttending[$index]">Unattend</button>
+      </div>      
+    
+    </div>
+
+  </div>
+</div>
 
 <footer class="footer">
   <div class="container">

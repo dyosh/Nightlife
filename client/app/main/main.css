@@ -2,6 +2,7 @@
 /*    -webkit-animation: cssAnimation 3.5s infinite linear;
     -moz-animation: cssAnimation 3.5s infinite linear;
     -o-animation: cssAnimation 3.5s infinite linear;*/
+    padding-top: 35px;
     font-size: 60px;
     text-align: center;
     line-height: 60px;
@@ -10,6 +11,19 @@
 
 ul {
     list-style-type: none;
+}
+
+p {
+    margin: 0px;
+}
+
+a:hover, 
+a:visited, 
+a:link, 
+a:active
+{
+    color: #3E8ACD;
+    text-decoration: none !important;
 }
 
 .thing-form {
@@ -32,18 +46,121 @@ ul {
     letter-spacing: -1px;
 }
 
-#locations {
+#search-locations {
     text-align: center;
+}
+
+#location-img {
+    border-radius: 4px;
+    float: right;
+    height: 105px;
+}
+
+#location-name {
+    color: #323333;
+    text-align: left;
+    font-size: 20px;
+    font-weight: 400;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.details-link {
+    cursor: pointer;
+    cursor: hand;     
+}
+
+.detailed-info {
+    text-align: center;
+    width: 100%;
+}
+
+#detailed-info {
+    height: 245px;
+    background-color: #EAEAEA;
+}
+
+#detailed-usr-info {
+    /*background-color: #DEDEDE;*/
+}
+
+#detailed-usr-info-container {
+    padding-top: 15px;
+    text-align: center;
+    margin: 0 auto;
+    max-width: 350px;
+}
+
+.locations-container {
+    /*text-align: center;*/
+    /*vertical-align: center;*/
+    padding-top:35px;
+    margin: 0 auto;
+    width: 90%;
+}
+
+.row {
+    float: none;
 }
 
 #location {
-    background-color: blue;
-    margin: 5px;
+    background-color: #EAEAEA;
+    border-style: solid;
+    border-color: white;
+    /*border-radius: 10px;*/
+    border-width: 5px;
+    height: 230px;
+
+    /*margin: 5px;*/
+    /*width: 350px;*/
+    /*height: 150px;*/
 }
 
-#test {
-    width: 100%;
+/*#location:hover {
+    background-color: blue;
+}*/
+
+#display-num {
+    background-color: #DEDEDE;
     text-align: center;
+    margin: 0 auto;
+    border-style: solid; 
+    border-color: #C7C7C7;
+    border-width: 2px;
+    border-radius: 4px;
+    width: 150px;
+    margin-bottom: 7px;
+}
+
+#front-pg-btns {
+    text-align: center;
+    /*padding-top: 5px;*/
+    /*z-index: 11;*/
+}
+
+.add-user-btn {
+    font-size: 17px;
+    color: #F8F8F8;
+    background-color: #2C77B9;
+}
+
+.add-user-btn:hover {
+    font-size: 18px;
+    color: #F8F8F8;
+    background-color: #2B69A1;
+}
+
+.rm-user-btn {
+    font-size: 17px;
+    color: #F8F8F8;
+    background-color: #E64747;
+}
+
+.rm-user-btn:hover {
+    font-size: 18px;
+    color: #F8F8F8;
+    background-color: #DB403C;
 }
 
 .hero-unit {
@@ -53,11 +170,18 @@ ul {
     text-align: center;
     text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
     /*background: #4393B9;*/
-    background-image: url("/assets/images/woman-street.jpg");
+    /*background-image: url("/assets/images/woman-street.jpg");*/
+    /*background-image: url("/assets/images/purple-texture.jpg");*/
+    background-color: #2A6293;
     background-position: center center;
     background-repeat: no-repeat;
     background-size: 100% 175%;
-    height: 475px;
+    height: 335px;
+    padding-top: 20px;
+}
+
+#moon {
+    font-size: 100px;
 }
 
 .footer {
@@ -69,4 +193,9 @@ ul {
 
 .navbar-text {
     margin-left: 15px;
+}
+
+.input-container {
+    width: 425px;
+    margin: 0 auto;
 }

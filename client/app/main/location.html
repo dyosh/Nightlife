@@ -1,19 +1,44 @@
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
 <div ng-include="'components/navbar/navbar.html'"></div>
 
+<header class="hero-unit" id="banner">
+  <div class="container">
+    <h1>Lets go!</h1>
+    <p class="lead">Explore new places</p>
+    <i id="moon" class="fa fa-moon-o"></i>
+  </div>
+</header>
 
-<div class="container">
-	<h1>{{location.name}}</h1>	
+<div class="container detailed-info">
+	<div class="row">
+		<div id="detailed-info" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			<h2>{{location.name}}</h2>	
+			<img src="{{location.rating_img_url}}"></img>
+			<p>{{location.display_phone}}</p>
+			<p>{{location.location.display_address['0']}}</p>
+			<p>{{location.location.display_address['1']}}</p>
+			<p>{{location.usersAttending.length}} going</p>
+			<p>View in <a href="{{location.url}}">yelp</a></p>
 
-	<img src="{{location.rating_img_url}}"></img>
-	<p>{{location.display_phone}}</p>
-	<p>{{location.location.display_address['0']}}</p>
-	<p>{{location.location.display_address['1']}}</p>
+    <button class="btn add-user-btn" ng-click="addUserToEvent(location, index)" ng-hide="isAttending[index]">Attend</button>
+    <button class="btn rm-user-btn" ng-click="removeUserFromEvent(location, index)" ng-show="isAttending[index]">Unattend</button>			
+		</div>
 
-	<p>Users attending: {{numAttending}}</p>
+	</div>
 
-	<p>View in <a href="{{location.url}}">yelp</a></p>
-
-	<button ng-click="addUserToEvent(location)">Going to location</button>
-	<button ng-click="removeUserFromEvent(location)">Remove from event</button>
+	<div id="detailed-usr-info-container" class="row">
+		<div id="detailed-usr-info">	
+			<h2>Users Attending</h2>
+			<div ng-repeat="user in location.usersAttending">
+				<h4>{{user.user_name}}</h4>
+			</div>
+		</div>
+	</div>
 </div>
 
+<footer class="footer">
+  <div class="container">
+      <p>Angular Fullstack v2.1.1 | <a href="https://github.com/dyosh">dyosh</a></p>
+  </div>
+</footer>
